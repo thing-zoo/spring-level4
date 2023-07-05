@@ -7,6 +7,7 @@ import com.example.springlevel4.entity.Comment;
 import com.example.springlevel4.entity.Post;
 import com.example.springlevel4.entity.User;
 import com.example.springlevel4.repository.CommentRepository;
+import com.example.springlevel4.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,8 @@ public class CommentService {
     private final PostService postService;
 
 
-    public ResponseEntity<CommentResponseDto> createComment(String token, Long postId, CommentRequestDto requestDto){
-        User currentUser = userService.getUserFromJwt(token);
+    public ResponseEntity<CommentResponseDto> createComment(UserDetailsImpl userDetails, Long postId, CommentRequestDto requestDto){
+        User currentUser = userDetails.getUser();
         Post currentPost = postService.findPost(postId);
 
         Comment comment = Comment.builder()
@@ -45,8 +46,8 @@ public class CommentService {
     }
 
     @Transactional
-    public ResponseEntity<CommentResponseDto> updateComment(String token, Long postId, Long id, CommentRequestDto requestDto) {
-        User currentUser = userService.getUserFromJwt(token);
+    public ResponseEntity<CommentResponseDto> updateComment(UserDetailsImpl userDetails, Long postId, Long id, CommentRequestDto requestDto) {
+        User currentUser = userDetails.getUser();
         Comment comment = findComment(postId, id);
 
         if(!userService.isAdmin(currentUser)){
@@ -58,8 +59,8 @@ public class CommentService {
         return ResponseEntity.status(200).body(new CommentResponseDto(comment));
     }
 
-    public ResponseEntity<ErrorResponseDto> deleteComment(String token, Long postId, Long id) {
-        User currentUser = userService.getUserFromJwt(token);
+    public ResponseEntity<ErrorResponseDto> deleteComment(UserDetailsImpl userDetails, Long postId, Long id) {
+        User currentUser = userDetails.getUser();
         Comment comment = findComment(postId, id);
         if(!userService.isAdmin(currentUser)){
             if(!comment.getUser().getUsername().equals(currentUser.getUsername()))

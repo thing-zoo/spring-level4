@@ -1,6 +1,7 @@
 package com.example.springlevel4.entity;
 
 import com.example.springlevel4.dto.PostRequestDto;
+import com.example.springlevel4.repository.PostRepository;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

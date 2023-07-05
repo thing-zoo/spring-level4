@@ -21,9 +21,4 @@ public class UserController {
     public ResponseEntity<ErrorResponseDto> signup(@RequestBody @Valid UserRequestDto requestDto) {
         return userService.signup(requestDto);
     }
-
-    @PostMapping("/users/login")
-    public ResponseEntity<ErrorResponseDto> login(@RequestBody @Valid UserRequestDto requestDto, HttpServletResponse res) {
-        return userService.login(requestDto, res);
-    }
 }
